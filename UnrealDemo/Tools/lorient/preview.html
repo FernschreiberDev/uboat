@@ -1,0 +1,46 @@
+<!doctype html>
+<!-- WebGL check of Import/Lorient without Unreal (three.js 0.160). Serve a folder holding
+     Import -> UnrealDemo/Import and preview -> a folder with this page, preview-shoot.mjs and
+     node_modules (npm install three@0.160.0 playwright-core@1.47), on 127.0.0.1:8765; then
+     node preview-shoot.mjs '[["name",[e,n,z],[e,n,z],fov]]' <out dir>  (ENU metres). -->
+<html><head><meta charset="utf-8"><style>html,body{margin:0;background:#9fb3c2}</style>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+</head><body><script type="module">
+import * as THREE from 'three';
+import {OBJLoader} from 'three/addons/loaders/OBJLoader.js';
+import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
+const W=1600,H=900;
+const renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});
+renderer.setSize(W,H);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
+document.body.appendChild(renderer.domElement);
+const scene=new THREE.Scene();scene.background=new THREE.Color(0xa9bccb);scene.fog=new THREE.Fog(0xa9bccb,2500,14000);
+const sun=new THREE.DirectionalLight(0xfff1dd,2.6);sun.position.set(-3000,4000,2500);scene.add(sun);
+scene.add(new THREE.HemisphereLight(0xcfdcea,0x4a4a3e,1.1));
+const tl=new THREE.TextureLoader();const T='/Import/Lorient/Textures/';
+function tex(n,srgb=true,rep=true){const t=tl.load(T+n);if(srgb)t.colorSpace=THREE.SRGBColorSpace;if(rep){t.wrapS=t.wrapT=THREE.RepeatWrapping;}t.anisotropy=8;return t}
+function pbr(name){return new THREE.MeshStandardMaterial({map:tex(`T_${name}_D.jpg`),normalMap:tex(`T_${name}_N.jpg`,false),normalScale:new THREE.Vector2(1,-1),roughness:0.9,metalness:0,side:THREE.DoubleSide})}
+const mats={LorientTerrain:new THREE.MeshStandardMaterial({map:tex('T_LorientLandcover_D.jpg',true,false),roughness:0.95}),
+ LorientGroix:new THREE.MeshStandardMaterial({color:0x5d6a4c,roughness:1}),
+ KeromanConcrete:pbr('KeromanConcrete'),KeromanRoof:pbr('KeromanRoof'),KeromanQuay:pbr('KeromanQuay'),KeromanSteel:pbr('KeromanSteel'),
+ LorientMasonry:pbr('LorientMasonry'),LorientSlate:pbr('LorientSlate'),LorientTrees:pbr('LorientTrees'),
+ BuoyRed:new THREE.MeshStandardMaterial({color:0xb02018}),BuoyGreen:new THREE.MeshStandardMaterial({color:0x1d7a35})};
+const loader=new OBJLoader();
+async function load(url){return new Promise((ok,ko)=>loader.load(url,ok,undefined,ko))}
+const names=Object.keys(mats);
+for(const n of names){const o=await load(`/Import/Lorient/${n}.obj`);o.traverse(c=>{if(c.isMesh)c.material=mats[n]});scene.add(o)}
+// Sea surface
+const water=new THREE.Mesh(new THREE.PlaneGeometry(40000,40000),new THREE.MeshStandardMaterial({color:0x2d4a52,roughness:0.15,metalness:0.1,transparent:true,opacity:0.86}));
+water.rotation.x=-Math.PI/2;water.position.y=0.02;scene.add(water);
+// VIIC props
+const layout=await (await fetch('/Import/Lorient/layout.json')).json();
+const v=await load('/Import/VIIC.obj');const geos=[];v.traverse(c=>{if(c.isMesh){const g=c.geometry.clone();g.clearGroups();for(const k of Object.keys(g.attributes))if(!['position','normal'].includes(k))g.deleteAttribute(k);geos.push(g)}});
+const boat=mergeGeometries(geos);const bm=new THREE.MeshStandardMaterial({color:0x5b6166,roughness:0.6,metalness:0.2});
+const place=(loc,yaw)=>{const m=new THREE.Mesh(boat,bm);const b=(yaw+90)*Math.PI/180;m.rotation.y=Math.PI/2-b;m.position.set(loc[1]/100,loc[2]/100,-loc[0]/100);scene.add(m)};
+for(const p of layout.viic_props)place(p.location,p.yaw);
+place(layout.player.location,layout.player.yaw);
+const cam=new THREE.PerspectiveCamera(50,W/H,1,40000);
+// e,n,z -> obj (x=-n,y=z,z=-e)
+const P=(e,n,z)=>new THREE.Vector3(-n,z,-e);
+window.shot=(eye,at,fov=50)=>{cam.fov=fov;cam.updateProjectionMatrix();cam.position.copy(P(...eye));cam.lookAt(P(...at));renderer.render(scene,cam);return renderer.domElement.toDataURL('image/jpeg',0.9)};
+window.ready=true;
+</script></body></html>

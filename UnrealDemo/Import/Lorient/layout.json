@@ -1,0 +1,261 @@
+{
+ "frame": "Unreal cm: X east, Y south, Z up; origin on the quay in front of Keroman III (about 47.7275 N, 3.3685 W)",
+ "player": {
+  "location": [
+   -3939.2,
+   -694.6,
+   -190.0
+  ],
+  "yaw": 10.0
+ },
+ "goals": [
+  {
+   "name": "Appareillage : sortir de l'alveole K3",
+   "location": [
+    24620.2,
+    4341.2,
+    0
+   ]
+  },
+  {
+   "name": "Passe de Port-Louis, sous la citadelle",
+   "location": [
+    10000.0,
+    215000.0,
+    0
+   ]
+  },
+  {
+   "name": "Plongee d'essai au large de Gavres",
+   "location": [
+    -50000.0,
+    530000.0,
+    -2000
+   ]
+  }
+ ],
+ "play_area": {
+  "center": [
+   0,
+   200000,
+   0.0
+  ],
+  "radius_cm": 420000
+ },
+ "viic_props": [
+  {
+   "label": "VIIC a quai K3/1",
+   "location": [
+    -5142.6,
+    6130.1,
+    -190.0
+   ],
+   "yaw": 10.0
+  },
+  {
+   "label": "VIIC a quai K3/2",
+   "location": [
+    -7695.9,
+    3334.3,
+    -190.0
+   ],
+   "yaw": 10.0
+  },
+  {
+   "label": "VIIC a quai K3/3",
+   "location": [
+    -4340.4,
+    1580.3,
+    -190.0
+   ],
+   "yaw": 10.0
+  },
+  {
+   "label": "VIIC a quai K3/5",
+   "location": [
+    -3538.1,
+    -2969.5,
+    -190.0
+   ],
+   "yaw": 10.0
+  },
+  {
+   "label": "VIIC en forme de radoub K3/6",
+   "location": [
+    -5106.6,
+    -5591.7,
+    -190.0
+   ],
+   "yaw": 10.0
+  },
+  {
+   "label": "VIIC en forme de radoub K3/7",
+   "location": [
+    -4705.5,
+    -7866.6,
+    -190.0
+   ],
+   "yaw": 10.0
+  },
+  {
+   "label": "VIIC en carenage Keroman II/2",
+   "location": [
+    -5585.1,
+    -19002.3,
+    942.0
+   ],
+   "yaw": -170.0
+  },
+  {
+   "label": "VIIC en carenage Keroman II/5",
+   "location": [
+    -4719.1,
+    -23914.0,
+    942.0
+   ],
+   "yaw": -170.0
+  },
+  {
+   "label": "VIIC en carenage Keroman II/7",
+   "location": [
+    -4141.7,
+    -27188.5,
+    942.0
+   ],
+   "yaw": -170.0
+  },
+  {
+   "label": "VIIC en carenage Keroman I/1",
+   "location": [
+    -21262.1,
+    -22234.1,
+    942.0
+   ],
+   "yaw": 10.0
+  },
+  {
+   "label": "VIIC en carenage Keroman I/4",
+   "location": [
+    -20268.0,
+    -27872.1,
+    942.0
+   ],
+   "yaw": 10.0
+  },
+  {
+   "label": "VIIC sur le transbordeur",
+   "location": [
+    -12741.9,
+    -24484.6,
+    932.0
+   ],
+   "yaw": 10.0
+  },
+  {
+   "label": "VIIC sous le Dombunker T5",
+   "location": [
+    -33291.3,
+    -40394.7,
+    922.0
+   ],
+   "yaw": -170.0
+  }
+ ],
+ "labels": [
+  {
+   "name": "Keroman III",
+   "location": [
+    -6795.2,
+    -1198.2,
+    2450.0
+   ]
+  },
+  {
+   "name": "Keroman II",
+   "location": [
+    -2499.9,
+    -22678.6,
+    2300.0
+   ]
+  },
+  {
+   "name": "Keroman I",
+   "location": [
+    -20679.9,
+    -26975.8,
+    2300.0
+   ]
+  },
+  {
+   "name": "Slipway et transbordeur",
+   "location": [
+    -8344.7,
+    -21779.9,
+    750.0
+   ]
+  },
+  {
+   "name": "Dombunker T5",
+   "location": [
+    -37132.1,
+    -41071.9,
+    2950.0
+   ]
+  },
+  {
+   "name": "Dombunker T6",
+   "location": [
+    -27641.5,
+    -27518.0,
+    2950.0
+   ]
+  },
+  {
+   "name": "Port de peche et plaque tournante",
+   "location": [
+    -25609.8,
+    -39040.2,
+    450.0
+   ]
+  },
+  {
+   "name": "Chantier K4",
+   "location": [
+    -28442.9,
+    61.9,
+    450.0
+   ]
+  },
+  {
+   "name": "Citadelle de Port-Louis",
+   "location": [
+    43000.0,
+    217500.0,
+    1700.0
+   ]
+  },
+  {
+   "name": "Kernevel (PC de Doenitz)",
+   "location": [
+    -45500,
+    93500,
+    1200
+   ]
+  },
+  {
+   "name": "Ile Saint-Michel",
+   "location": [
+    105000.0,
+    -28000.0,
+    1000
+   ]
+  }
+ ],
+ "extent_m": {
+  "e0": -4000.0,
+  "e1": 4000.0,
+  "n0": -6600.0,
+  "n1": 2600.0,
+  "step": 25.0
+ }
+}

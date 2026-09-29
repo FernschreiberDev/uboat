@@ -13,6 +13,28 @@ class UBuoyancyComponent;
 class UCameraComponent;
 class USpringArmComponent;
 
+// Per-map settings of the exploration: start, play area, objectives, save slot. AtlanticVoyage keeps
+// its original values; /Game/Lorient/LorientKeroman starts in Keroman III (Import/Lorient/layout.json).
+struct FVoyageMission {
+ FString Title=TEXT("NORDATLANTIK  /  EXPLORATION");
+ FString SlotBase=TEXT("NordatlantikVoyage");
+ FString Welcome=TEXT("Bienvenue a bord — H : commandes");
+ FString Home=TEXT("Retour au mouillage — decouvertes conservees");
+ FVector Start=FVector(0,0,-190);
+ float StartYaw=-90;
+ FVector2D Center=FVector2D::ZeroVector;
+ float Radius=200000;       // cm, play area
+ float ChartRadius=100000;  // cm shown by the chart's radius
+ bool Harbour=false;        // pens and quays: traces start below roofs, walls are traced sideways
+ FVector Goals[3]={FVector(0,-35000,0),FVector(28000,-62000,-4500),FVector(6000,34000,0)};
+ FString Names[3]={TEXT("Balise du large"),TEXT("Epave a 45 metres"),TEXT("Rendez-vous avec le Bismarck")};
+ // Smoke test: where it starts, points it must find blocked, and approach offsets to each goal.
+ FVector TestStart=FVector::ZeroVector; bool TestTeleport=false;
+ FVector TestBlocked=FVector(80000,50000,-190);
+ FVector TestOffsets[3]={FVector(0,0,-190),FVector(-7000,0,-190),FVector(0,-7800,-190)};
+ static FVoyageMission ForMap(const FString& MapName);
+};
+
 UCLASS()
 class NORDATLANTIKDEMO_API AVoyageController : public APlayerController {
  GENERATED_BODY()
@@ -66,8 +88,9 @@ public:
  int32 Discoveries=0,Selected=0;
  bool ShowHelp=true,DiveControl=false,Ready=false,Smoke=false,ResumeTest=false;
  FVector LastSafe=FVector(0,0,-190);
- static FVector Goal(int32 Index);
- static FString GoalName(int32 Index);
+ FVoyageMission Mission;
+ FVector Goal(int32 Index) const{return Mission.Goals[Index%3];}
+ const FString& GoalName(int32 Index) const{return Mission.Names[Index%3];}
  FString Slot() const;
  void Notify(const FString& Text);
  void SmokeTick(float DeltaTime);

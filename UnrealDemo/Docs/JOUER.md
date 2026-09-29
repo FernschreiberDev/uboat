@@ -53,3 +53,5 @@ La plongée est un asservissement de profondeur simplifié, pas une reproduction
 Les hélices, gouvernails et barres de plongée sont maintenant articulés. Leur fonctionnement, leurs limites et les références sont décrits dans [ORGANES-MOBILES.md](ORGANES-MOBILES.md).
 
 Ambiance cinématographique dynamique : moteurs, vagues et immersion. Réglages et limites : [SONS.md](SONS.md).
+
+Une seconde carte, **Lorient — Keroman 1943** (`Jouer-a-Lorient.command`), part d'une alvéole de Keroman III avec les mêmes commandes ; Home y ramène le bateau à l'alvéole. Voir [LORIENT.md](LORIENT.md).

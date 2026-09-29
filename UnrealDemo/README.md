@@ -16,6 +16,8 @@ Lancer ensuite `UnrealDemo/Jouer-a-Nordatlantik.command`. Les lanceurs supposent
 
 **Version d’exploration jouable : `Jouer-a-Nordatlantik.command`.** Pilotage du VIIC, plongée assistée, trois découvertes et sauvegarde dans la nouvelle carte AtlanticVoyage. Commandes et limites : [JOUER.md](Docs/JOUER.md). Les démonstrations de rendu décrites ci-dessous restent disponibles. Dans la version jouable, les hélices, gouvernails et barres sont animés : **G** pour les vues rapprochées, **V** pour comparer avec le modèle fixe.
 
+**Lorient — base de Keroman 1943 : `Jouer-a-Lorient.command`.** Nouvelle carte jouable : départ dans une alvéole de Keroman III, sortie par la rade et la passe de Port-Louis, plongée au large. Blocs K1, K2, K3, slipway et transbordeur, Dombunker, citadelle, villes en ruine. Elle se construit une fois avec `Tools/build-lorient.sh`. Détails, sources et limites : [LORIENT.md](Docs/LORIENT.md).
+
 ## Ouvrir
 
 Pour ouvrir l’éditeur : double-cliquer sur `Ouvrir-la-demo.command`.

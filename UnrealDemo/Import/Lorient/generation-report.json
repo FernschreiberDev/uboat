@@ -1,0 +1,175 @@
+{
+ "generator": "Tools/generate-lorient.py",
+ "meshes": {
+  "LorientTerrain": {
+   "triangles": 380288,
+   "vertices": 191273,
+   "min_m": [
+    -4000.0,
+    -6600.0,
+    -34.0
+   ],
+   "max_m": [
+    4000.0,
+    2600.0,
+    16.91
+   ],
+   "md5": "71f959c234d6c046d1139255051b7964"
+  },
+  "LorientGroix": {
+   "triangles": 7200,
+   "vertices": 3721,
+   "min_m": [
+    -12456.92,
+    -14258.85,
+    -6.0
+   ],
+   "max_m": [
+    -2343.08,
+    -6341.15,
+    42.1
+   ],
+   "md5": "b3594def5a7142d17f20db21b9a034a3"
+  },
+  "KeromanConcrete": {
+   "triangles": 2134,
+   "vertices": 1396,
+   "min_m": [
+    -579.28,
+    -137.3,
+    -10.0
+   ],
+   "max_m": [
+    121.55,
+    689.37,
+    38.7
+   ],
+   "md5": "af9ba7c5d7245a557ec86e26df81c938"
+  },
+  "KeromanRoof": {
+   "triangles": 514,
+   "vertices": 424,
+   "min_m": [
+    -259.03,
+    -89.51,
+    11.5
+   ],
+   "max_m": [
+    50.01,
+    379.41,
+    24.5
+   ],
+   "md5": "b60025a954617256bfe9e8fa1c3e38d4"
+  },
+  "KeromanQuay": {
+   "triangles": 446,
+   "vertices": 386,
+   "min_m": [
+    -579.28,
+    -2291.46,
+    -12.65
+   ],
+   "max_m": [
+    582.21,
+    786.61,
+    8.0
+   ],
+   "md5": "eb7f05dacf683b60185b0d1ffcde8cd8"
+  },
+  "KeromanSteel": {
+   "triangles": 4912,
+   "vertices": 3578,
+   "min_m": [
+    -479.83,
+    -98.62,
+    -10.64
+   ],
+   "max_m": [
+    116.21,
+    744.49,
+    39.9
+   ],
+   "md5": "409db4d620e3fe00984ad3a662ae34d3"
+  },
+  "LorientMasonry": {
+   "triangles": 317315,
+   "vertices": 267850,
+   "min_m": [
+    -3004.48,
+    -3951.79,
+    1.23
+   ],
+   "max_m": [
+    1851.08,
+    2605.47,
+    30.21
+   ],
+   "md5": "8f08956d4e987336d0f1135ea7dac1ef"
+  },
+  "LorientSlate": {
+   "triangles": 42408,
+   "vertices": 42406,
+   "min_m": [
+    -3004.48,
+    -3951.79,
+    4.97
+   ],
+   "max_m": [
+    1851.08,
+    2605.37,
+    30.21
+   ],
+   "md5": "9f68ce46ba1acfbd8ac60d4407143bd3"
+  },
+  "LorientTrees": {
+   "triangles": 47385,
+   "vertices": 54675,
+   "min_m": [
+    -4002.99,
+    -5753.61,
+    1.51
+   ],
+   "max_m": [
+    4003.09,
+    2603.34,
+    32.0
+   ],
+   "md5": "3f1c360802e54febbb024935b9d3e81f"
+  },
+  "BuoyRed": {
+   "triangles": 264,
+   "vertices": 192,
+   "min_m": [
+    -401.1,
+    -4201.05,
+    -2.0
+   ],
+   "max_m": [
+    61.1,
+    -1298.95,
+    5.6
+   ],
+   "md5": "e05ac77c3c23e07e9818bec232de58ca"
+  },
+  "BuoyGreen": {
+   "triangles": 156,
+   "vertices": 123,
+   "min_m": [
+    -151.1,
+    -4151.05,
+    -2.0
+   ],
+   "max_m": [
+    301.1,
+    -1498.95,
+    5.8
+   ],
+   "md5": "7f3625165c82ab48e6b46ac8b0d38362"
+  }
+ },
+ "stats": {
+  "houses": 13206,
+  "trees": 3645
+ },
+ "seconds": 210.7
+}
