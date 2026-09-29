@@ -1,0 +1,244 @@
+{
+  "beam_m" : 36,
+  "bm_l_m" : 337.06560257457198,
+  "bm_t_m" : 9.6084043114440263,
+  "deck_at_side_m" : 4.9493243243243246,
+  "displacement_t" : 49264.005729570592,
+  "draught_m" : 10,
+  "frame" : "lengths in model metres: x to starboard, y up from the waterline, z forward of amidships; the OBJ has z negated (bow towards -Z, as VIIC.obj)",
+  "kb_m" : 5.4876607844943113,
+  "lcb_m" : 0.21376404930509807,
+  "lcf_m" : -5.1523103225730154,
+  "main_mast_top_m" : [
+    -0.017500000074505806,
+    40.117462158203125,
+    -19.128860473632812
+  ],
+  "max_m" : [
+    17.989999771118164,
+    40.117462158203125,
+    125.25
+  ],
+  "meshes" : 321,
+  "min_m" : [
+    -17.989999771118164,
+    -10,
+    -125.25
+  ],
+  "paints" : [
+    {
+      "metallic" : 0.10000000000000001,
+      "name" : "Bismarck_hull",
+      "normal" : "T_Bismarck_hull_N.png",
+      "paint" : "hull",
+      "roughness" : 0.71999999999999997,
+      "texture" : "T_Bismarck_hull.png",
+      "texture_size" : [
+        8192,
+        1024
+      ],
+      "tiling" : false,
+      "variants" : {
+        "21mai" : "T_Bismarck_hull_21mai.png"
+      }
+    },
+    {
+      "metallic" : 0,
+      "name" : "Bismarck_deck",
+      "normal" : "T_Bismarck_deck_N.png",
+      "paint" : "deck",
+      "roughness" : 0.81999999999999995,
+      "texture" : "T_Bismarck_deck.png",
+      "texture_size" : [
+        8192,
+        2048
+      ],
+      "tiling" : false,
+      "variants" : {
+        "21mai" : "T_Bismarck_deck_21mai.png"
+      }
+    },
+    {
+      "metallic" : 0.90000000000000002,
+      "name" : "Bismarck_bronze",
+      "paint" : "bronze",
+      "roughness" : 0.34999999999999998,
+      "srgb" : [
+        0.61176470588235299,
+        0.49803921568627452,
+        0.27058823529411763
+      ]
+    },
+    {
+      "metallic" : 0.10000000000000001,
+      "name" : "Bismarck_bottom",
+      "paint" : "bottom",
+      "roughness" : 0.75,
+      "srgb" : [
+        0.35686274509803922,
+        0.16470588235294117,
+        0.098039215686274508
+      ]
+    },
+    {
+      "metallic" : 0.34999999999999998,
+      "name" : "Bismarck_gun",
+      "paint" : "gun",
+      "roughness" : 0.5,
+      "srgb" : [
+        0.36862745098039218,
+        0.3843137254901961,
+        0.41176470588235292
+      ]
+    },
+    {
+      "metallic" : 0,
+      "name" : "Bismarck_black",
+      "paint" : "black",
+      "roughness" : 0.90000000000000002,
+      "srgb" : [
+        0.086274509803921567,
+        0.094117647058823528,
+        0.10588235294117647
+      ]
+    },
+    {
+      "metallic" : 0.12,
+      "name" : "Bismarck_dark",
+      "paint" : "dark",
+      "roughness" : 0.71999999999999997,
+      "srgb" : [
+        0.42745098039215684,
+        0.44313725490196076,
+        0.47843137254901963
+      ]
+    },
+    {
+      "metallic" : 0.40000000000000002,
+      "name" : "Bismarck_rope",
+      "paint" : "rope",
+      "roughness" : 0.80000000000000004,
+      "srgb" : [
+        0.22745098039215686,
+        0.23529411764705882,
+        0.25098039215686274
+      ]
+    },
+    {
+      "metallic" : 0.12,
+      "name" : "Bismarck_light",
+      "paint" : "light",
+      "roughness" : 0.68000000000000005,
+      "srgb" : [
+        0.69019607843137254,
+        0.70588235294117652,
+        0.72941176470588232
+      ]
+    },
+    {
+      "metallic" : 0,
+      "name" : "Bismarck_canvas",
+      "paint" : "canvas",
+      "roughness" : 0.92000000000000004,
+      "srgb" : [
+        0.85098039215686272,
+        0.83529411764705885,
+        0.78431372549019607
+      ]
+    },
+    {
+      "metallic" : 0.12,
+      "name" : "Bismarck_wall",
+      "normal" : "T_Bismarck_wall_N.png",
+      "paint" : "wall",
+      "roughness" : 0.68000000000000005,
+      "texture" : "T_Bismarck_wall.png",
+      "texture_size" : [
+        1024,
+        512
+      ],
+      "tiling" : true
+    },
+    {
+      "metallic" : 0.12,
+      "name" : "Bismarck_roof",
+      "paint" : "roof",
+      "roughness" : 0.73999999999999999,
+      "srgb" : [
+        0.61960784313725492,
+        0.63529411764705879,
+        0.6588235294117647
+      ]
+    },
+    {
+      "metallic" : 0.40000000000000002,
+      "name" : "Bismarck_glass",
+      "paint" : "glass",
+      "roughness" : 0.12,
+      "srgb" : [
+        0.11372549019607843,
+        0.16470588235294117,
+        0.20000000000000001
+      ]
+    },
+    {
+      "metallic" : 0,
+      "name" : "Bismarck_ensign",
+      "paint" : "ensign",
+      "roughness" : 0.94999999999999996,
+      "texture" : "T_Bismarck_ensign.png",
+      "texture_size" : [
+        1024,
+        1024
+      ],
+      "tiling" : false
+    },
+    {
+      "metallic" : 0.050000000000000003,
+      "name" : "Bismarck_boatHull",
+      "paint" : "boatHull",
+      "roughness" : 0.55000000000000004,
+      "srgb" : [
+        0.6588235294117647,
+        0.67450980392156867,
+        0.69803921568627447
+      ]
+    },
+    {
+      "metallic" : 0,
+      "name" : "Bismarck_boat",
+      "paint" : "boat",
+      "roughness" : 0.45000000000000001,
+      "srgb" : [
+        0.6588235294117647,
+        0.41568627450980394,
+        0.24313725490196078
+      ]
+    },
+    {
+      "metallic" : 0.14999999999999999,
+      "name" : "Bismarck_funnelCap",
+      "paint" : "funnelCap",
+      "roughness" : 0.59999999999999998,
+      "srgb" : [
+        0.81176470588235294,
+        0.82352941176470584,
+        0.83529411764705885
+      ]
+    }
+  ],
+  "size_m" : [
+    35.979999542236328,
+    50.117462158203125,
+    250.5
+  ],
+  "source" : "Sources\/Bismarck (UnrealDemo\/Tools\/export-bismarck.sh)",
+  "triangles" : 193698,
+  "vertices" : 212733,
+  "volume_m3" : 48062.444614215216,
+  "waterline_m" : [
+    -122.25,
+    119.49999999999999
+  ],
+  "waterplane_m2" : 5849.1431798603071
+}

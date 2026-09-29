@@ -1,0 +1,54 @@
+[
+  {
+    "path": "/Game/Demo/Scenery/CoastalCliff01/LODSource/coastal_cliff_01_LOD0.coastal_cliff_01_LOD0",
+    "min": [
+      -4505.55810546875,
+      -620.5800170898438,
+      -65.00276947021484
+    ],
+    "max": [
+      4692.4375,
+      476.0909118652344,
+      967.5503540039062
+    ]
+  },
+  {
+    "path": "/Game/Demo/Scenery/CoastalCliff01/LODSource/coastal_cliff_01_LOD1.coastal_cliff_01_LOD1",
+    "min": [
+      -4505.55810546875,
+      -620.5799560546875,
+      -65.04421997070312
+    ],
+    "max": [
+      4692.416015625,
+      476.0909118652344,
+      967.9227905273438
+    ]
+  },
+  {
+    "path": "/Game/Demo/Scenery/CoastalCliff01/LODSource/coastal_cliff_01_LOD2.coastal_cliff_01_LOD2",
+    "min": [
+      -4505.55810546875,
+      -620.5799560546875,
+      -64.89198303222656
+    ],
+    "max": [
+      4692.416015625,
+      475.37432861328125,
+      967.4723510742188
+    ]
+  },
+  {
+    "path": "/Game/Demo/Scenery/CoastalCliff01/LODSource/coastal_cliff_01_LOD3.coastal_cliff_01_LOD3",
+    "min": [
+      -4505.1904296875,
+      -620.5799560546875,
+      -63.44181823730469
+    ],
+    "max": [
+      4692.416015625,
+      475.146484375,
+      967.0307006835938
+    ]
+  }
+]

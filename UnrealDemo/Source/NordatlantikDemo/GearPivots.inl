@@ -1,0 +1,7 @@
+AddGear(TEXT("Hull"),FVector(0,0,0));
+AddGear(TEXT("propellerPort"),FVector(-2879.9999237060547,-137.00000047683716,-100));
+AddGear(TEXT("propellerStarboard"),FVector(-2879.9999237060547,137.00000047683716,-100));
+AddGear(TEXT("rudderPort"),FVector(-3135.0000381469727,-80.0000011920929,0));
+AddGear(TEXT("rudderStarboard"),FVector(-3135.0000381469727,80.0000011920929,0));
+AddGear(TEXT("bowPlanes"),FVector(2489.9999618530273,0,-145.00000476837158));
+AddGear(TEXT("sternPlanes"),FVector(-2989.9999618530273,0,-100));

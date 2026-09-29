@@ -1,0 +1,27 @@
+{
+  "FileVersion": 3,
+  "Category": "Demo",
+  "Description": "Nordatlantik \u2014 essai Unreal ind\u00e9pendant du jeu SceneKit",
+  "Plugins": [
+    {
+      "Name": "Water",
+      "Enabled": true
+    },
+    {
+      "Name": "PythonScriptPlugin",
+      "Enabled": true
+    },
+    {
+      "Name": "EditorScriptingUtilities",
+      "Enabled": true
+    }
+  ],
+  "EngineAssociation": "5.8",
+  "Modules": [
+    {
+      "Name": "NordatlantikDemo",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    }
+  ]
+}

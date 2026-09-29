@@ -1,0 +1,24 @@
+{
+  "asset": "seaside_rock",
+  "author": "Dimitrios Savva",
+  "source": "https://polyhaven.com/a/seaside_rock",
+  "license": "CC0",
+  "license_url": "https://polyhaven.com/license",
+  "files": {
+    "Diffuse": {
+      "size": 3883057,
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/seaside_rock/seaside_rock_diff_2k.jpg",
+      "md5": "f70bd6084c9b634daaea40b0cee34c20"
+    },
+    "Displacement": {
+      "size": 870843,
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/seaside_rock/seaside_rock_disp_2k.jpg",
+      "md5": "fa1a33f9adda55d3cb96754c5ae5bf1d"
+    },
+    "Rough": {
+      "size": 1681507,
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/seaside_rock/seaside_rock_rough_2k.jpg",
+      "md5": "08323a44503ccc4c1b922396455881cc"
+    }
+  }
+}

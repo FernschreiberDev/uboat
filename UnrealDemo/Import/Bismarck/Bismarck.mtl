@@ -1,0 +1,158 @@
+# Bismarck paints (Kd in sRGB)
+
+newmtl Bismarck_hull
+Ka 0 0 0
+Kd 1 1 1
+map_Kd T_Bismarck_hull.png
+Pr 0.72
+Pm 0.1
+Ns 1.858024691358025
+d 1
+illum 2
+
+newmtl Bismarck_deck
+Ka 0 0 0
+Kd 1 1 1
+map_Kd T_Bismarck_deck.png
+Pr 0.82
+Pm 0.0
+Ns 1.0
+d 1
+illum 2
+
+newmtl Bismarck_bronze
+Ka 0 0 0
+Kd 0.611764705882353 0.4980392156862745 0.27058823529411763
+Pr 0.35
+Pm 0.9
+Ns 14.326530612244902
+d 1
+illum 2
+
+newmtl Bismarck_bottom
+Ka 0 0 0
+Kd 0.3568627450980392 0.16470588235294117 0.09803921568627451
+Pr 0.75
+Pm 0.1
+Ns 1.5555555555555554
+d 1
+illum 2
+
+newmtl Bismarck_gun
+Ka 0 0 0
+Kd 0.3686274509803922 0.3843137254901961 0.4117647058823529
+Pr 0.5
+Pm 0.35
+Ns 6.0
+d 1
+illum 2
+
+newmtl Bismarck_black
+Ka 0 0 0
+Kd 0.08627450980392157 0.09411764705882353 0.10588235294117647
+Pr 0.9
+Pm 0.0
+Ns 1.0
+d 1
+illum 2
+
+newmtl Bismarck_dark
+Ka 0 0 0
+Kd 0.42745098039215684 0.44313725490196076 0.47843137254901963
+Pr 0.72
+Pm 0.12
+Ns 1.858024691358025
+d 1
+illum 2
+
+newmtl Bismarck_rope
+Ka 0 0 0
+Kd 0.22745098039215686 0.23529411764705882 0.25098039215686274
+Pr 0.8
+Pm 0.4
+Ns 1.1249999999999996
+d 1
+illum 2
+
+newmtl Bismarck_light
+Ka 0 0 0
+Kd 0.6901960784313725 0.7058823529411765 0.7294117647058823
+Pr 0.68
+Pm 0.12
+Ns 2.3252595155709335
+d 1
+illum 2
+
+newmtl Bismarck_canvas
+Ka 0 0 0
+Kd 0.8509803921568627 0.8352941176470589 0.7843137254901961
+Pr 0.92
+Pm 0.0
+Ns 1.0
+d 1
+illum 2
+
+newmtl Bismarck_wall
+Ka 0 0 0
+Kd 1 1 1
+map_Kd T_Bismarck_wall.png
+Pr 0.68
+Pm 0.12
+Ns 2.3252595155709335
+d 1
+illum 2
+
+newmtl Bismarck_roof
+Ka 0 0 0
+Kd 0.6196078431372549 0.6352941176470588 0.6588235294117647
+Pr 0.74
+Pm 0.12
+Ns 1.652300949598247
+d 1
+illum 2
+
+newmtl Bismarck_glass
+Ka 0 0 0
+Kd 0.11372549019607843 0.16470588235294117 0.2
+Pr 0.12
+Pm 0.4
+Ns 136.88888888888889
+d 1
+illum 2
+
+newmtl Bismarck_ensign
+Ka 0 0 0
+Kd 1 1 1
+map_Kd T_Bismarck_ensign.png
+Pr 0.95
+Pm 0.0
+Ns 1.0
+d 1
+illum 2
+
+newmtl Bismarck_boatHull
+Ka 0 0 0
+Kd 0.6588235294117647 0.6745098039215687 0.6980392156862745
+Pr 0.55
+Pm 0.05
+Ns 4.611570247933884
+d 1
+illum 2
+
+newmtl Bismarck_boat
+Ka 0 0 0
+Kd 0.6588235294117647 0.41568627450980394 0.24313725490196078
+Pr 0.45
+Pm 0.0
+Ns 7.876543209876543
+d 1
+illum 2
+
+newmtl Bismarck_funnelCap
+Ka 0 0 0
+Kd 0.8117647058823529 0.8235294117647058 0.8352941176470589
+Pr 0.6
+Pm 0.15
+Ns 3.5555555555555554
+d 1
+illum 2

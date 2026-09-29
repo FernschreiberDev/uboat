@@ -1,0 +1,26 @@
+{
+  "Enable Water VS Mapping": true,
+  "UseVT": false,
+  "UseHighQualityFiltering": false,
+  "UseScalarWaterBodyIndex": false,
+  "UseFixedVelocity": false,
+  "UseWaterInfoTexture": true,
+  "UseFixedZ": false,
+  "UseFixedWaterDepth": false,
+  "UseBakedSim": false,
+  "Fluidsim Use Custom DistanceField": false,
+  "Show FluidSim Debug Bounds": false,
+  "Enable Ocean Foam": true,
+  "Enable River": false,
+  "Enable Waves": true,
+  "Enable Lake Transition": false,
+  "Enable Ocean Transition": false,
+  "Caustics Use Manual Water Body Index": false,
+  "Caustics": false,
+  "DisableDynamicBoundsClip": false,
+  "land": {
+    "position": "<Struct 'Vector' (0x7105f93b20) {x: 80000.000000, y: 50000.000000, z: 0.000000}>",
+    "bounds": "<Struct 'Box' (0x451f3df6fc0) {min: {x: -80000.000000, y: -80000.000000, z: -7038.200195}, max: {x: 80000.000000, y: 80000.000000, z: 19710.000000}, is_valid: True}>",
+    "material": "<Object '/Game/Demo/Scenery/CoastalRockPBR.CoastalRockPBR' (0x451e95d4600) Class 'Material'>"
+  }
+}

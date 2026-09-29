@@ -1,0 +1,10 @@
+{
+  "mesh": "/Game/Demo/Scenery/CoastalCliff01/CoastalCliffRuntime.CoastalCliffRuntime",
+  "lod_count": 4,
+  "vertices_per_lod": [
+    238686,
+    121526,
+    62253,
+    32185
+  ]
+}

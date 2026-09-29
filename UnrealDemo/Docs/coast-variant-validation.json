@@ -1,0 +1,43 @@
+{
+  "source": "/Game/Demo/AtlanticDemo",
+  "variant": "/Game/Demo/AtlanticCoast",
+  "boat_unchanged": true,
+  "boat": {
+    "mesh": "/Game/Demo/Meshes/VIIC.VIIC",
+    "position": [
+      0.0,
+      0.0,
+      -190.0
+    ],
+    "rotation": [
+      0.0,
+      0.0,
+      -89.99999999437944
+    ],
+    "mass": 769000.0,
+    "physics": true,
+    "buoyancy": [
+      "/Game/Demo/Blueprints/BP_FlottaisonVIIC.BP_FlottaisonVIIC_C"
+    ]
+  },
+  "verified_date": "2026-09-27",
+  "ocean_visible_after_editor_restart": true,
+  "water_render_meshes_saved": true,
+  "original_files_unchanged": {
+    "Content/Demo/AtlanticDemo.umap": true,
+    "Content/Demo/Meshes/VIIC.uasset": true,
+    "Content/Demo/Blueprints/BP_FlottaisonVIIC.uasset": true,
+    "Content/Python/float_submarine.py": true
+  },
+  "capture": "Docs/Atlantic-coast-demo.png",
+  "simulation": {
+    "settle_seconds": 10,
+    "measured_seconds": 25,
+    "samples": 671,
+    "in_water_fraction": 1.0,
+    "heave_std_cm": 81.85169770294817,
+    "roll_std_deg": 1.679273699424224,
+    "pitch_std_deg": 1.9305435289331792,
+    "max_drift_cm": 3.6377189020043867
+  }
+}

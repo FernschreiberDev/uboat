@@ -1,0 +1,35 @@
+{
+  "map": "/Game/Demo/AtlanticCoast.AtlanticCoast",
+  "rock_sections": 8,
+  "rock_lods": 4,
+  "coast_material": "/Game/Demo/Scenery/CoastalRockPBR.CoastalRockPBR",
+  "water_render_meshes": 2,
+  "boat_mass_kg": 769000.0,
+  "boat_location_cm": [
+    0.0,
+    0.0,
+    -190.0
+  ],
+  "boat_yaw": -89.99999999437944,
+  "buoyancy_class": [
+    "/Game/Demo/Blueprints/BP_FlottaisonVIIC.BP_FlottaisonVIIC_C"
+  ],
+  "verified_date": "2026-09-27",
+  "original_files_unchanged": {
+    "Content/Demo/AtlanticDemo.umap": true,
+    "Content/Demo/Meshes/VIIC.uasset": true,
+    "Content/Demo/Blueprints/BP_FlottaisonVIIC.uasset": true,
+    "Content/Python/float_submarine.py": true
+  },
+  "bismarck_files_unchanged": true,
+  "visual_review": [
+    "Docs/Atlantic-coast-ensemble.png",
+    "Docs/Atlantic-coast-rivage.png",
+    "Docs/Atlantic-coast-roche.png"
+  ],
+  "limitations": [
+    "No surf simulation",
+    "Scenery rocks have no navigation collisions",
+    "No FPS claim from editor captures"
+  ]
+}

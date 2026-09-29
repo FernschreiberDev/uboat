@@ -1,0 +1,68 @@
+{
+  "mesh": {
+    "triangles": 193302,
+    "size_cm": [
+      25050.0,
+      3598.0,
+      5011.746337890625
+    ],
+    "keel_cm": -1000.0,
+    "main_mast_x_cm": -1912.885986328125
+  },
+  "slots": [
+    "Bismarck_hull",
+    "Bismarck_deck",
+    "Bismarck_bronze",
+    "Bismarck_bottom",
+    "Bismarck_gun",
+    "Bismarck_black",
+    "Bismarck_dark",
+    "Bismarck_rope",
+    "Bismarck_light",
+    "Bismarck_canvas",
+    "Bismarck_wall",
+    "Bismarck_roof",
+    "Bismarck_glass",
+    "Bismarck_boatHull",
+    "Bismarck_boat",
+    "Bismarck_funnelCap",
+    "Bismarck_ensign"
+  ],
+  "livery": "24mai",
+  "level": "/Game/Bismarck/AtlanticBismarck",
+  "actor": "Bismarck — cuirassé, mai 1941",
+  "location_cm": [
+    6000.0,
+    34000.0,
+    0.0
+  ],
+  "yaw": -156.0,
+  "bounds_origin_cm": [
+    6000.0,
+    34000.0,
+    1505.8731689453125
+  ],
+  "bounds_extent_cm": [
+    12173.876077729248,
+    6737.84473325078,
+    2505.8731689453125
+  ],
+  "mass_t": 49264.00572957059,
+  "gm_m": 3.9,
+  "kg_m": 11.196065095938339,
+  "pontoons": 20,
+  "pontoon_radius_cm": 1402.5624192561986,
+  "periods_s": {
+    "heave": 5.753387594793049,
+    "roll": 13.903387412635528,
+    "pitch": 6.663848533980601
+  },
+  "protected_unchanged": [
+    "Content/Demo/AtlanticCoast.umap",
+    "Content/Demo/AtlanticDemo.umap",
+    "Content/Demo/Blueprints/BP_FlottaisonVIIC.uasset",
+    "Content/Demo/Meshes/VIIC.uasset",
+    "Content/Python/float_submarine.py"
+  ],
+  "unsaved": []
+}

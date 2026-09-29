@@ -1,0 +1,14 @@
+{
+  "mesh": "/Game/Demo/Scenery/CoastalCliff01/CoastalCliff01.CoastalCliff01",
+  "bounds_min": [
+    -4505.55810546875,
+    -620.5800170898438,
+    -65.04421997070312
+  ],
+  "bounds_max": [
+    4692.4375,
+    476.0909118652344,
+    967.9227905273438
+  ],
+  "lods": 1
+}

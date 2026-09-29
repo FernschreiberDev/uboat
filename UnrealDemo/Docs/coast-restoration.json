@@ -1,0 +1,16 @@
+{
+  "method": "scoped rollback against untouched audited snapshot",
+  "removed_only_our_actors": [
+    "Balise orange du large",
+    "Balise \u2014 couronne",
+    "Banc de l epave",
+    "Bismarck \u2014 rendez-vous au mouillage",
+    "Epave \u2014 cheminee",
+    "Epave \u2014 coque",
+    "Epave \u2014 passerelle",
+    "Fond marin \u2014 240 m"
+  ],
+  "source_actor_count": 19,
+  "game_mode_override": null,
+  "restored_tags_and_collision": true
+}

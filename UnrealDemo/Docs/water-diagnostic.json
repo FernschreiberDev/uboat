@@ -1,0 +1,206 @@
+{
+  "AtlanticDemo": [
+    {
+      "actor": "Zone oc\u00e9an",
+      "position": "<Struct 'Vector' (0x70a9d9b760) {x: 0.000000, y: 0.000000, z: 0.000000}>",
+      "hidden": false,
+      "components": [
+        {
+          "name": "WaterMesh",
+          "class": "WaterMeshComponent",
+          "visible": "True",
+          "hidden_in_game": "False",
+          "render_in_main_pass": "True",
+          "render_in_depth_pass": "True",
+          "cast_shadow": "True",
+          "far_distance_material": "<Object '/Water/Materials/WaterSurface/Water_FarMesh.Water_FarMesh' (0x8693e9ae600) Class 'MaterialInstanceConstant'>",
+          "far_distance_mesh_extent": "4000000.0"
+        },
+        {
+          "name": "BoundsComponent",
+          "class": "BoxComponent",
+          "visible": "True",
+          "hidden_in_game": "True",
+          "render_in_main_pass": "True",
+          "render_in_depth_pass": "True",
+          "cast_shadow": "False"
+        },
+        {
+          "name": "Sprite",
+          "class": "BillboardComponent",
+          "visible": "True",
+          "hidden_in_game": "True",
+          "render_in_main_pass": "True",
+          "render_in_depth_pass": "True",
+          "cast_shadow": "False"
+        }
+      ]
+    },
+    {
+      "actor": "Atlantique",
+      "position": "<Struct 'Vector' (0x709e48e1d0) {x: 80000.000000, y: 50000.000000, z: 0.000000}>",
+      "hidden": false,
+      "components": [
+        {
+          "name": "WaterSpline",
+          "class": "WaterSplineComponent",
+          "visible": "True",
+          "hidden_in_game": "False",
+          "render_in_main_pass": "True",
+          "render_in_depth_pass": "True",
+          "cast_shadow": "False"
+        },
+        {
+          "name": "WaterInfoMeshComponent",
+          "class": "WaterBodyInfoMeshComponent",
+          "visible": "True",
+          "hidden_in_game": "False",
+          "render_in_main_pass": "True",
+          "render_in_depth_pass": "True",
+          "cast_shadow": "True"
+        },
+        {
+          "name": "DilatedWaterInfoMeshComponent",
+          "class": "WaterBodyInfoMeshComponent",
+          "visible": "True",
+          "hidden_in_game": "False",
+          "render_in_main_pass": "True",
+          "render_in_depth_pass": "True",
+          "cast_shadow": "True"
+        },
+        {
+          "name": "WaterBodyOceanComponent",
+          "class": "WaterBodyOceanComponent",
+          "visible": "True",
+          "hidden_in_game": "False",
+          "render_in_main_pass": "True",
+          "render_in_depth_pass": "True",
+          "cast_shadow": "False",
+          "water_material": "<Object '/Game/Demo/Materials/AtlanticWater.AtlanticWater' (0x8693e9adc00) Class 'MaterialInstanceConstant'>",
+          "water_zone_override": "<Object '/Game/Demo/AtlanticDemo.AtlanticDemo:PersistentLevel.WaterZone_0' (0x86930930c00) Class 'WaterZone'>",
+          "ocean_extents": "<Struct 'Vector2D' (0x869309418f0) {x: 500000.000000, y: 500000.000000}>"
+        },
+        {
+          "name": "OceanBoxCollisionComponent_0",
+          "class": "OceanBoxCollisionComponent",
+          "visible": "True",
+          "hidden_in_game": "True",
+          "render_in_main_pass": "True",
+          "render_in_depth_pass": "True",
+          "cast_shadow": "False"
+        },
+        {
+          "name": "BillboardComponent_0",
+          "class": "BillboardComponent",
+          "visible": "True",
+          "hidden_in_game": "True",
+          "render_in_main_pass": "True",
+          "render_in_depth_pass": "True",
+          "cast_shadow": "False"
+        }
+      ]
+    }
+  ],
+  "AtlanticCoast": [
+    {
+      "actor": "Zone oc\u00e9an",
+      "position": "<Struct 'Vector' (0x70a9dc8150) {x: 0.000000, y: 0.000000, z: 0.000000}>",
+      "hidden": false,
+      "components": [
+        {
+          "name": "WaterMesh",
+          "class": "WaterMeshComponent",
+          "visible": "True",
+          "hidden_in_game": "False",
+          "render_in_main_pass": "True",
+          "render_in_depth_pass": "True",
+          "cast_shadow": "True",
+          "far_distance_material": "<Object '/Water/Materials/WaterSurface/Water_FarMesh.Water_FarMesh' (0x8693e9ae600) Class 'MaterialInstanceConstant'>",
+          "far_distance_mesh_extent": "4000000.0"
+        },
+        {
+          "name": "BoundsComponent",
+          "class": "BoxComponent",
+          "visible": "True",
+          "hidden_in_game": "True",
+          "render_in_main_pass": "True",
+          "render_in_depth_pass": "True",
+          "cast_shadow": "False"
+        },
+        {
+          "name": "Sprite",
+          "class": "BillboardComponent",
+          "visible": "True",
+          "hidden_in_game": "True",
+          "render_in_main_pass": "True",
+          "render_in_depth_pass": "True",
+          "cast_shadow": "False"
+        }
+      ]
+    },
+    {
+      "actor": "Atlantique",
+      "position": "<Struct 'Vector' (0x70a9dc81a0) {x: 80000.000000, y: 50000.000000, z: 0.000000}>",
+      "hidden": false,
+      "components": [
+        {
+          "name": "WaterSpline",
+          "class": "WaterSplineComponent",
+          "visible": "True",
+          "hidden_in_game": "False",
+          "render_in_main_pass": "True",
+          "render_in_depth_pass": "True",
+          "cast_shadow": "False"
+        },
+        {
+          "name": "WaterInfoMeshComponent",
+          "class": "WaterBodyInfoMeshComponent",
+          "visible": "True",
+          "hidden_in_game": "False",
+          "render_in_main_pass": "True",
+          "render_in_depth_pass": "True",
+          "cast_shadow": "True"
+        },
+        {
+          "name": "DilatedWaterInfoMeshComponent",
+          "class": "WaterBodyInfoMeshComponent",
+          "visible": "True",
+          "hidden_in_game": "False",
+          "render_in_main_pass": "True",
+          "render_in_depth_pass": "True",
+          "cast_shadow": "True"
+        },
+        {
+          "name": "WaterBodyOceanComponent",
+          "class": "WaterBodyOceanComponent",
+          "visible": "True",
+          "hidden_in_game": "False",
+          "render_in_main_pass": "True",
+          "render_in_depth_pass": "True",
+          "cast_shadow": "False",
+          "water_material": "<Object '/Game/Demo/Materials/AtlanticWater.AtlanticWater' (0x8693e9adc00) Class 'MaterialInstanceConstant'>",
+          "water_zone_override": "<Object '/Game/Demo/AtlanticCoast.AtlanticCoast:PersistentLevel.WaterZone_0' (0x8693093f600) Class 'WaterZone'>",
+          "ocean_extents": "<Struct 'Vector2D' (0x869309418f0) {x: 500000.000000, y: 500000.000000}>"
+        },
+        {
+          "name": "OceanBoxCollisionComponent_0",
+          "class": "OceanBoxCollisionComponent",
+          "visible": "True",
+          "hidden_in_game": "True",
+          "render_in_main_pass": "True",
+          "render_in_depth_pass": "True",
+          "cast_shadow": "False"
+        },
+        {
+          "name": "BillboardComponent_0",
+          "class": "BillboardComponent",
+          "visible": "True",
+          "hidden_in_game": "True",
+          "render_in_main_pass": "True",
+          "render_in_depth_pass": "True",
+          "cast_shadow": "False"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,300 @@
+{
+  "/Game/Voyage/AtlanticVoyage": {
+    "mode": null,
+    "actors": [
+      {
+        "label": "VIIC \u2014 mod\u00e8le d\u00e9taill\u00e9",
+        "class": "StaticMeshActor",
+        "tags": [],
+        "mesh": "/Game/Demo/Meshes/VIIC.VIIC",
+        "collision": "<CollisionEnabled.QUERY_AND_PHYSICS: 3>"
+      },
+      {
+        "label": "C\u00f4te rocheuse",
+        "class": "StaticMeshActor",
+        "tags": [],
+        "mesh": "/Game/Demo/Scenery/AtlanticCliffs.AtlanticCliffs",
+        "collision": "<CollisionEnabled.QUERY_AND_PHYSICS: 3>"
+      },
+      {
+        "label": "Soleil",
+        "class": "DirectionalLight",
+        "tags": []
+      },
+      {
+        "label": "Atmosph\u00e8re",
+        "class": "SkyAtmosphere",
+        "tags": []
+      },
+      {
+        "label": "Lumi\u00e8re du ciel",
+        "class": "SkyLight",
+        "tags": []
+      },
+      {
+        "label": "Nuages",
+        "class": "VolumetricCloud",
+        "tags": []
+      },
+      {
+        "label": "Brume maritime",
+        "class": "ExponentialHeightFog",
+        "tags": []
+      },
+      {
+        "label": "Exposition",
+        "class": "PostProcessVolume",
+        "tags": []
+      },
+      {
+        "label": "Zone oc\u00e9an",
+        "class": "WaterZone",
+        "tags": []
+      },
+      {
+        "label": "Atlantique",
+        "class": "WaterBodyOcean",
+        "tags": []
+      },
+      {
+        "label": "D\u00e9part \u2014 vue du sous-marin",
+        "class": "PlayerStart",
+        "tags": []
+      },
+      {
+        "label": "Rivage rocheux 01",
+        "class": "StaticMeshActor",
+        "tags": [],
+        "mesh": "/Game/Demo/Scenery/CoastalCliff01/CoastalCliffRuntime.CoastalCliffRuntime",
+        "collision": "<CollisionEnabled.QUERY_AND_PHYSICS: 3>"
+      },
+      {
+        "label": "Rivage rocheux 02",
+        "class": "StaticMeshActor",
+        "tags": [],
+        "mesh": "/Game/Demo/Scenery/CoastalCliff01/CoastalCliffRuntime.CoastalCliffRuntime",
+        "collision": "<CollisionEnabled.QUERY_AND_PHYSICS: 3>"
+      },
+      {
+        "label": "Rivage rocheux 03",
+        "class": "StaticMeshActor",
+        "tags": [],
+        "mesh": "/Game/Demo/Scenery/CoastalCliff01/CoastalCliffRuntime.CoastalCliffRuntime",
+        "collision": "<CollisionEnabled.QUERY_AND_PHYSICS: 3>"
+      },
+      {
+        "label": "Rivage rocheux 04",
+        "class": "StaticMeshActor",
+        "tags": [],
+        "mesh": "/Game/Demo/Scenery/CoastalCliff01/CoastalCliffRuntime.CoastalCliffRuntime",
+        "collision": "<CollisionEnabled.QUERY_AND_PHYSICS: 3>"
+      },
+      {
+        "label": "Rivage rocheux 05",
+        "class": "StaticMeshActor",
+        "tags": [],
+        "mesh": "/Game/Demo/Scenery/CoastalCliff01/CoastalCliffRuntime.CoastalCliffRuntime",
+        "collision": "<CollisionEnabled.QUERY_AND_PHYSICS: 3>"
+      },
+      {
+        "label": "Rivage rocheux 06",
+        "class": "StaticMeshActor",
+        "tags": [],
+        "mesh": "/Game/Demo/Scenery/CoastalCliff01/CoastalCliffRuntime.CoastalCliffRuntime",
+        "collision": "<CollisionEnabled.QUERY_AND_PHYSICS: 3>"
+      },
+      {
+        "label": "Rivage rocheux 07",
+        "class": "StaticMeshActor",
+        "tags": [],
+        "mesh": "/Game/Demo/Scenery/CoastalCliff01/CoastalCliffRuntime.CoastalCliffRuntime",
+        "collision": "<CollisionEnabled.QUERY_AND_PHYSICS: 3>"
+      },
+      {
+        "label": "Rivage rocheux 08",
+        "class": "StaticMeshActor",
+        "tags": [],
+        "mesh": "/Game/Demo/Scenery/CoastalCliff01/CoastalCliffRuntime.CoastalCliffRuntime",
+        "collision": "<CollisionEnabled.QUERY_AND_PHYSICS: 3>"
+      }
+    ]
+  },
+  "/Game/Demo/AtlanticCoast": {
+    "mode": "/Script/NordatlantikDemo.VoyageGameMode",
+    "actors": [
+      {
+        "label": "VIIC \u2014 mod\u00e8le d\u00e9taill\u00e9",
+        "class": "StaticMeshActor",
+        "tags": [
+          "VoyageVIIC"
+        ],
+        "mesh": "/Game/Demo/Meshes/VIIC.VIIC",
+        "collision": "<CollisionEnabled.QUERY_AND_PHYSICS: 3>"
+      },
+      {
+        "label": "C\u00f4te rocheuse",
+        "class": "StaticMeshActor",
+        "tags": [],
+        "mesh": "/Game/Demo/Scenery/AtlanticCliffs.AtlanticCliffs",
+        "collision": "<CollisionEnabled.QUERY_ONLY: 1>"
+      },
+      {
+        "label": "Soleil",
+        "class": "DirectionalLight",
+        "tags": []
+      },
+      {
+        "label": "Atmosph\u00e8re",
+        "class": "SkyAtmosphere",
+        "tags": []
+      },
+      {
+        "label": "Lumi\u00e8re du ciel",
+        "class": "SkyLight",
+        "tags": []
+      },
+      {
+        "label": "Nuages",
+        "class": "VolumetricCloud",
+        "tags": []
+      },
+      {
+        "label": "Brume maritime",
+        "class": "ExponentialHeightFog",
+        "tags": []
+      },
+      {
+        "label": "Exposition",
+        "class": "PostProcessVolume",
+        "tags": []
+      },
+      {
+        "label": "Zone oc\u00e9an",
+        "class": "WaterZone",
+        "tags": []
+      },
+      {
+        "label": "Atlantique",
+        "class": "WaterBodyOcean",
+        "tags": []
+      },
+      {
+        "label": "D\u00e9part \u2014 vue du sous-marin",
+        "class": "PlayerStart",
+        "tags": []
+      },
+      {
+        "label": "Rivage rocheux 01",
+        "class": "StaticMeshActor",
+        "tags": [],
+        "mesh": "/Game/Demo/Scenery/CoastalCliff01/CoastalCliffRuntime.CoastalCliffRuntime",
+        "collision": "<CollisionEnabled.QUERY_ONLY: 1>"
+      },
+      {
+        "label": "Rivage rocheux 02",
+        "class": "StaticMeshActor",
+        "tags": [],
+        "mesh": "/Game/Demo/Scenery/CoastalCliff01/CoastalCliffRuntime.CoastalCliffRuntime",
+        "collision": "<CollisionEnabled.QUERY_ONLY: 1>"
+      },
+      {
+        "label": "Rivage rocheux 03",
+        "class": "StaticMeshActor",
+        "tags": [],
+        "mesh": "/Game/Demo/Scenery/CoastalCliff01/CoastalCliffRuntime.CoastalCliffRuntime",
+        "collision": "<CollisionEnabled.QUERY_ONLY: 1>"
+      },
+      {
+        "label": "Rivage rocheux 04",
+        "class": "StaticMeshActor",
+        "tags": [],
+        "mesh": "/Game/Demo/Scenery/CoastalCliff01/CoastalCliffRuntime.CoastalCliffRuntime",
+        "collision": "<CollisionEnabled.QUERY_ONLY: 1>"
+      },
+      {
+        "label": "Rivage rocheux 05",
+        "class": "StaticMeshActor",
+        "tags": [],
+        "mesh": "/Game/Demo/Scenery/CoastalCliff01/CoastalCliffRuntime.CoastalCliffRuntime",
+        "collision": "<CollisionEnabled.QUERY_ONLY: 1>"
+      },
+      {
+        "label": "Rivage rocheux 06",
+        "class": "StaticMeshActor",
+        "tags": [],
+        "mesh": "/Game/Demo/Scenery/CoastalCliff01/CoastalCliffRuntime.CoastalCliffRuntime",
+        "collision": "<CollisionEnabled.QUERY_ONLY: 1>"
+      },
+      {
+        "label": "Rivage rocheux 07",
+        "class": "StaticMeshActor",
+        "tags": [],
+        "mesh": "/Game/Demo/Scenery/CoastalCliff01/CoastalCliffRuntime.CoastalCliffRuntime",
+        "collision": "<CollisionEnabled.QUERY_ONLY: 1>"
+      },
+      {
+        "label": "Rivage rocheux 08",
+        "class": "StaticMeshActor",
+        "tags": [],
+        "mesh": "/Game/Demo/Scenery/CoastalCliff01/CoastalCliffRuntime.CoastalCliffRuntime",
+        "collision": "<CollisionEnabled.QUERY_ONLY: 1>"
+      },
+      {
+        "label": "Fond marin \u2014 240 m",
+        "class": "StaticMeshActor",
+        "tags": [],
+        "mesh": "/Engine/BasicShapes/Cube.Cube",
+        "collision": "<CollisionEnabled.QUERY_ONLY: 1>"
+      },
+      {
+        "label": "Balise orange du large",
+        "class": "StaticMeshActor",
+        "tags": [],
+        "mesh": "/Engine/BasicShapes/Cylinder.Cylinder",
+        "collision": "<CollisionEnabled.NO_COLLISION: 0>"
+      },
+      {
+        "label": "Balise \u2014 couronne",
+        "class": "StaticMeshActor",
+        "tags": [],
+        "mesh": "/Engine/BasicShapes/Sphere.Sphere",
+        "collision": "<CollisionEnabled.NO_COLLISION: 0>"
+      },
+      {
+        "label": "Banc de l epave",
+        "class": "StaticMeshActor",
+        "tags": [],
+        "mesh": "/Engine/BasicShapes/Sphere.Sphere",
+        "collision": "<CollisionEnabled.QUERY_ONLY: 1>"
+      },
+      {
+        "label": "Epave \u2014 coque",
+        "class": "StaticMeshActor",
+        "tags": [],
+        "mesh": "/Engine/BasicShapes/Cube.Cube",
+        "collision": "<CollisionEnabled.QUERY_ONLY: 1>"
+      },
+      {
+        "label": "Epave \u2014 passerelle",
+        "class": "StaticMeshActor",
+        "tags": [],
+        "mesh": "/Engine/BasicShapes/Cube.Cube",
+        "collision": "<CollisionEnabled.QUERY_ONLY: 1>"
+      },
+      {
+        "label": "Epave \u2014 cheminee",
+        "class": "StaticMeshActor",
+        "tags": [],
+        "mesh": "/Engine/BasicShapes/Cylinder.Cylinder",
+        "collision": "<CollisionEnabled.QUERY_ONLY: 1>"
+      },
+      {
+        "label": "Bismarck \u2014 rendez-vous au mouillage",
+        "class": "StaticMeshActor",
+        "tags": [],
+        "mesh": "/Game/Bismarck/Meshes/Bismarck.Bismarck",
+        "collision": "<CollisionEnabled.QUERY_AND_PHYSICS: 3>"
+      }
+    ]
+  }
+}

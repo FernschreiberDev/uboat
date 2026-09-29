@@ -1,0 +1,346 @@
+#include "Voyage.h"
+#include "VoyageAudio.h"
+#include "BuoyancyComponent.h"
+#include "WaterBodyActor.h"
+#include "WaterBodyComponent.h"
+#include "Camera/CameraComponent.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/PlayerController.h"
+#include "GameFramework/PlayerInput.h"
+#include "Components/StaticMeshComponent.h"
+#include "Components/InputComponent.h"
+#include "Engine/StaticMeshActor.h"
+#include "Engine/Canvas.h"
+#include "Engine/Engine.h"
+#include "EngineUtils.h"
+#include "Kismet/GameplayStatics.h"
+#include "Misc/CommandLine.h"
+#include "Misc/Paths.h"
+#include "Misc/FileHelper.h"
+#include "HAL/PlatformMisc.h"
+#include "HAL/IConsoleManager.h"
+#include "HighResScreenshot.h"
+#include "UnrealClient.h"
+
+void AVoyageController::SetupInputComponent(){
+ Super::SetupInputComponent();
+ // F5 is a game save action, not the engine's development view-mode hotkey.
+ if(PlayerInput)PlayerInput->DebugExecBindings.RemoveAll([](const FKeyBind& B){return B.Key==EKeys::F5;});
+}
+AVoyageGameMode::AVoyageGameMode(){DefaultPawnClass=AVoyagePawn::StaticClass();HUDClass=AVoyageHUD::StaticClass();PlayerControllerClass=AVoyageController::StaticClass();}
+AVoyagePawn::AVoyagePawn(){
+ PrimaryActorTick.bCanEverTick=true;PrimaryActorTick.bTickEvenWhenPaused=true;
+ SetRootComponent(CreateDefaultSubobject<USceneComponent>(TEXT("Helm")));
+ Arm=CreateDefaultSubobject<USpringArmComponent>(TEXT("OrbitCamera"));Arm->SetupAttachment(RootComponent);
+ Arm->TargetArmLength=10000;Arm->bDoCollisionTest=false;
+ Camera=CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));Camera->SetupAttachment(Arm);Camera->SetFieldOfView(65);
+ Soundscape=CreateDefaultSubobject<UVoyageAudio>(TEXT("OceanSoundscape"));Soundscape->SetupAttachment(RootComponent);
+}
+FVector AVoyagePawn::Goal(int32 I){switch(I%3){case 0:return FVector(0,-35000,0);case 1:return FVector(28000,-62000,-4500);default:return FVector(6000,34000,0);}}
+FString AVoyagePawn::GoalName(int32 I){switch(I%3){case 0:return TEXT("Balise du large");case 1:return TEXT("Epave a 45 metres");default:return TEXT("Rendez-vous avec le Bismarck");}}
+FString AVoyagePawn::Slot() const{if(FParse::Param(FCommandLine::Get(),TEXT("VoyageAudioTest")))return TEXT("NordatlantikVoyage_AudioTest");return FParse::Param(FCommandLine::Get(),TEXT("VoyageInputTest"))?TEXT("NordatlantikVoyage_InputTest"):(Smoke||ResumeTest?TEXT("NordatlantikVoyage_Test"):TEXT("NordatlantikVoyage_v1"));}
+void AVoyagePawn::Notify(const FString& T){Notice=T;NoticeClock=5;}
+void AVoyagePawn::BeginPlay(){
+ Super::BeginPlay();
+ // Daylight in this map reaches EV 12.3; keep cached Lumen lighting in range.
+ if(auto* Exposure=IConsoleManager::Get().FindConsoleVariable(TEXT("r.EyeAdaptation.CachedLightingPreExposure")))Exposure->Set(8.f,ECVF_SetByCode);
+ Smoke=FParse::Param(FCommandLine::Get(),TEXT("VoyageSmokeTest"))||FParse::Param(FCommandLine::Get(),TEXT("VoyageGearTest"));ResumeTest=FParse::Param(FCommandLine::Get(),TEXT("VoyageResumeTest"));
+ for(TActorIterator<AStaticMeshActor> It(GetWorld());It;++It){if(It->ActorHasTag(TEXT("VoyageVIIC"))){Boat=*It;Hull=It->GetStaticMeshComponent();break;}}
+ if(!Hull){Notify(TEXT("VIIC introuvable dans cette scene"));UE_LOG(LogTemp,Error,TEXT("VOYAGE_NO_BOAT"));return;}
+ Buoyancy=Boat->FindComponentByClass<UBuoyancyComponent>();
+ if(!Buoyancy){Notify(TEXT("Flottabilite introuvable"));return;}
+ Hull->SetSimulatePhysics(true);Hull->WakeAllRigidBodies();
+ // Explicit registration also covers spawning inside an already-overlapping ocean.
+ for(TActorIterator<AWaterBody> It(GetWorld());It;++It)Buoyancy->EnteredWaterBody(It->GetWaterBodyComponent());
+ Heading=Hull->GetComponentRotation().Yaw;LastSafe=Hull->GetComponentLocation();
+ Ready=true;SetupGear();
+ if(!Smoke)ReadSave();
+ Soundscape->Start();UE_LOG(LogTemp,Display,TEXT("VOYAGE_AUDIO_STARTED"));
+ if(auto* PC=Cast<APlayerController>(GetController())){PC->SetInputMode(FInputModeGameOnly());PC->bShowMouseCursor=false;}
+ if(Smoke){Throttle=1;ShowHelp=false;TestStart=Hull->GetComponentLocation();TestHeading=Heading;}
+ if(ResumeTest){
+  if(Discoveries!=7||Distance<100){TestFail(TEXT("save_reload"));return;}
+  FFileHelper::SaveStringToFile(TEXT("PASS: checkpoint restored, three discoveries, distance retained\n"),*(FPaths::ProjectSavedDir()/TEXT("VoyageTests/resume.txt")));
+  UE_LOG(LogTemp,Display,TEXT("VOYAGE_RESUME_PASS"));
+ }
+ Notify(TEXT("Bienvenue a bord — H : commandes"));
+}
+void AVoyagePawn::SetupPlayerInputComponent(UInputComponent* I){
+ Super::SetupPlayerInputComponent(I);
+ auto Bind=[&](FKey K,void(AVoyagePawn::*F)()){auto& B=I->BindKey(K,IE_Pressed,this,F);B.bExecuteWhenPaused=true;};
+ Bind(EKeys::F6,&AVoyagePawn::SoundToggle);Bind(EKeys::F7,&AVoyagePawn::SoundDown);Bind(EKeys::F8,&AVoyagePawn::SoundUp);Bind(EKeys::M,&AVoyagePawn::SoundToggle);Bind(EKeys::Equals,&AVoyagePawn::SoundUp);Bind(EKeys::Add,&AVoyagePawn::SoundUp);Bind(EKeys::Hyphen,&AVoyagePawn::SoundDown);Bind(EKeys::Subtract,&AVoyagePawn::SoundDown);
+ Bind(EKeys::Escape,&AVoyagePawn::Pause);Bind(EKeys::SpaceBar,&AVoyagePawn::Pause);
+ Bind(EKeys::V,&AVoyagePawn::ToggleGear);Bind(EKeys::G,&AVoyagePawn::GearCamera);
+ Bind(EKeys::P,&AVoyagePawn::Surface);Bind(EKeys::X,&AVoyagePawn::Stop);Bind(EKeys::Tab,&AVoyagePawn::NextObjective);
+ Bind(EKeys::C,&AVoyagePawn::Recenter);Bind(EKeys::H,&AVoyagePawn::Help);Bind(EKeys::F5,&AVoyagePawn::SaveManual);Bind(EKeys::Home,&AVoyagePawn::Reset);
+}
+void AVoyagePawn::SetupGear(){
+ auto AddGear=[&](const TCHAR* Name,FVector Pivot){
+  auto* Mesh=LoadObject<UStaticMesh>(nullptr,*(FString(TEXT("/Game/Voyage/Articulated/"))+Name+TEXT(".")+Name));
+  if(!Mesh)return;
+  auto* C=NewObject<UStaticMeshComponent>(Boat,FName(FString(TEXT("Animated_"))+Name));
+  Boat->AddInstanceComponent(C);C->SetMobility(EComponentMobility::Movable);
+  C->SetStaticMesh(Mesh);C->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+  C->SetupAttachment(Hull);C->SetRelativeLocation(Pivot);C->RegisterComponent();GearMeshes.Add(C);
+ };
+ #include "GearPivots.inl"
+ if(GearMeshes.Num()!=7){for(auto* C:GearMeshes)C->DestroyComponent();GearMeshes.Empty();Articulated=false;UE_LOG(LogTemp,Error,TEXT("GEAR_MESHES_MISSING"));return;}
+ Hull->SetVisibility(false,false);
+ UE_LOG(LogTemp,Display,TEXT("GEAR_READY seven visual components; original physics retained"));
+}
+void AVoyagePawn::ToggleGear(){
+ if(GearMeshes.Num()!=7)return;
+ Articulated=!Articulated;Hull->SetVisibility(!Articulated,false);
+ for(auto* C:GearMeshes)C->SetVisibility(Articulated);
+ Notify(Articulated?TEXT("VIIC articule"):TEXT("VIIC original — comparaison visuelle"));
+}
+void AVoyagePawn::GearCamera(){GearView=(GearView+1)%3;Notify(GearView==1?TEXT("Vue des helices et gouvernails"):GearView==2?TEXT("Vue des barres avant"):TEXT("Camera de navigation"));}
+void AVoyagePawn::UpdateGear(float Dt){
+ Gear.Step(Dt,Throttle,Rudder,TargetDepth-Depth,Hull->GetPhysicsLinearVelocity().Z,Speed,DiveControl||TargetDepth>.5);
+ if(GearMeshes.Num()!=7)return;
+ // Positive rotation about +X sends the top of the port screw outboard.
+ GearMeshes[1]->SetRelativeRotation(FQuat(FVector::ForwardVector,FMath::DegreesToRadians(Gear.Phase)));
+ GearMeshes[2]->SetRelativeRotation(FQuat(FVector::ForwardVector,FMath::DegreesToRadians(-Gear.Phase)));
+ for(int I:{3,4})GearMeshes[I]->SetRelativeRotation(FRotator(0,-Gear.Rudder,0));
+ GearMeshes[5]->SetRelativeRotation(FQuat(FVector::RightVector,FMath::DegreesToRadians(Gear.Bow)));
+ GearMeshes[6]->SetRelativeRotation(FQuat(FVector::RightVector,FMath::DegreesToRadians(Gear.Stern)));
+}
+void AVoyagePawn::SoundToggle(){SoundMuted=!SoundMuted;Notify(SoundMuted?TEXT("Son coupe"):TEXT("Ambiance sonore activee"));Save();}
+void AVoyagePawn::SoundUp(){SoundVolume=FMath::Min(1.f,SoundVolume+.1f);SoundMuted=false;Notify(FString::Printf(TEXT("Volume : %.0f %%"),SoundVolume*100));Save();}
+void AVoyagePawn::SoundDown(){SoundVolume=FMath::Max(0.f,SoundVolume-.1f);Notify(FString::Printf(TEXT("Volume : %.0f %%"),SoundVolume*100));Save();}
+void AVoyagePawn::UpdateSound(){
+ if(!Soundscape||!Hull)return;
+ // Listening perspective is the camera, not just the submarine's depth.
+ const float WaterMix=(1.f-FMath::SmoothStep(-100.f,100.f,float(Camera->GetComponentLocation().Z)));
+ const float Range=FVector::Distance(Camera->GetComponentLocation(),Hull->GetComponentLocation());
+ const float NearMix=FMath::Clamp(3500.f/(Range+1500.f),.12f,1.f);
+ const float ElectricMix=FMath::SmoothStep(2.f,8.f,Depth);
+ float Volume=(SoundMuted||UGameplayStatics::IsGamePaused(this))?0.f:SoundVolume;
+ float Rpm=Gear.RPM,Water=WaterMix,Electric=ElectricMix;
+ if(FParse::Param(FCommandLine::Get(),TEXT("VoyageAudioTest"))){
+  Rpm=Elapsed<5?0:Elapsed<10?400:200;Water=Elapsed<10?0:1;Electric=Water;
+  if(Elapsed>15)Volume=0;
+  if(Elapsed>18){
+   const bool Good=Soundscape->Frames.load()>48000&&Soundscape->AudibleFrames.load()>24000;
+   FFileHelper::SaveStringToFile(Good?TEXT("PASS: Unreal mixer invoked procedural stereo audio and produced nonzero samples"):TEXT("FAIL: no mixer output"),*(FPaths::ProjectSavedDir()/TEXT("VoyageTests/audio.txt")));
+   UE_LOG(LogTemp,Display,TEXT("VOYAGE_AUDIO_TEST frames=%llu audible=%llu"),(unsigned long long)Soundscape->Frames.load(),(unsigned long long)Soundscape->AudibleFrames.load());FPlatformMisc::RequestExit(false);
+  }
+ }
+ Soundscape->SetEnvironment(Volume,Rpm,Water,Electric,FMath::Abs(Speed),NearMix);
+}
+void AVoyagePawn::Pause(){if(auto* PC=Cast<APlayerController>(GetController())){PC->SetPause(!UGameplayStatics::IsGamePaused(this));if(UGameplayStatics::IsGamePaused(this))Save();}}
+void AVoyagePawn::Surface(){TargetDepth=0;Notify(TEXT("Remontee vers la surface"));}
+void AVoyagePawn::Stop(){Throttle=0;Notify(TEXT("Moteurs stoppes — inertie conservee"));}
+void AVoyagePawn::NextObjective(){Selected=(Selected+1)%3;}
+void AVoyagePawn::Recenter(){GearView=0;Orbit=0;Elevation=-16;Zoom=10000;}
+void AVoyagePawn::Help(){ShowHelp=!ShowHelp;}
+void AVoyagePawn::SaveManual(){Save();if(!Notice.StartsWith(TEXT("Echec")))Notify(TEXT("Partie sauvegardee"));}
+void AVoyagePawn::Reset(){
+ if(!Ready)return;
+ bool Fresh=false;
+ if(auto* PC=Cast<APlayerController>(GetController()))Fresh=PC->IsInputKeyDown(EKeys::LeftShift)||PC->IsInputKeyDown(EKeys::RightShift);
+ if(Fresh){Discoveries=0;Distance=0;Selected=0;}
+ Hull->SetWorldLocationAndRotation(FVector(0,0,-190),FRotator(0,-90,0),false,nullptr,ETeleportType::TeleportPhysics);
+ Hull->SetPhysicsLinearVelocity(FVector::ZeroVector);Hull->SetPhysicsAngularVelocityInRadians(FVector::ZeroVector);
+ Gear=FGearDynamics();Throttle=0;TargetDepth=0;DiveControl=false;Buoyancy->SetCanBeActive(true);LastSafe=Hull->GetComponentLocation();Recenter();
+ Notify(Fresh?TEXT("Nouvelle exploration"):TEXT("Retour au mouillage — decouvertes conservees"));Save();
+}
+void AVoyagePawn::PollControls(float Dt){
+ auto* PC=Cast<APlayerController>(GetController());if(!PC)return;
+ auto Down=[&](FKey K){return PC->IsInputKeyDown(K);};
+ const float Gas=(Down(EKeys::W)||Down(EKeys::Z)||Down(EKeys::Up)?1.f:0.f)-(Down(EKeys::S)||Down(EKeys::Down)?1.f:0.f);
+ Throttle=FMath::Clamp(Throttle+Gas*Dt*.30f,-.30f,1.f);
+ Rudder=(Down(EKeys::D)||Down(EKeys::Right)?1.f:0.f)-(Down(EKeys::A)||Down(EKeys::Q)||Down(EKeys::Left)?1.f:0.f);
+ TargetDepth=FMath::Clamp(TargetDepth+((Down(EKeys::F)?1.f:0.f)-(Down(EKeys::R)?1.f:0.f))*Dt*7.f,0.f,120.f);
+ float MX=0,MY=0;PC->GetInputMouseDelta(MX,MY);
+ if(Down(EKeys::LeftMouseButton)||Down(EKeys::RightMouseButton)){Orbit+=MX*.2f;Elevation=FMath::Clamp(Elevation-MY*.2f,-75.f,12.f);}
+ if(PC->WasInputKeyJustPressed(EKeys::MouseScrollUp))Zoom=FMath::Max(1800.f,Zoom*.86f);
+ if(PC->WasInputKeyJustPressed(EKeys::MouseScrollDown))Zoom=FMath::Min(22000.f,Zoom/ .86f);
+}
+bool AVoyagePawn::SafeAt(const FVector& P) const{
+ if(FVector2D(P).Size()>200000||P.Z< -22500)return false;
+ FCollisionQueryParams Q(SCENE_QUERY_STAT(VoyageDepth),true,Boat);Q.AddIgnoredActor(this);
+ const FVector F=Hull->GetForwardVector().GetSafeNormal2D();const FVector R=FVector::CrossProduct(FVector::UpVector,F);
+ for(const FVector& Offset:{FVector::ZeroVector,F*3500,F*(-3500),R*450,R*(-450)}){
+  FVector XY=P+Offset;FHitResult H;
+  if(GetWorld()->LineTraceSingleByChannel(H,FVector(XY.X,XY.Y,35000),FVector(XY.X,XY.Y,-25000),ECC_Visibility,Q)){
+   if(H.ImpactPoint.Z>P.Z-350)return false;
+  }
+ }
+ return true;
+}
+void AVoyagePawn::Tick(float RawDt){
+ Super::Tick(RawDt);if(!Ready)return;
+ const float Dt=FMath::Min(RawDt,.05f);
+ const FVector Pos=Hull->GetComponentLocation();const FRotator Rot=Hull->GetComponentRotation();
+ Depth=FMath::Max(0.f,float(-(Pos.Z+190)/100));Heading=Rot.Yaw;
+ // Keep the following camera below the surface while diving.
+ const float Immersion=FMath::Clamp((Depth-3.f)/5.f,0.f,1.f);
+ const float CameraPitch=FMath::Lerp(Elevation,FMath::Max(Elevation,-4.f),Immersion);
+ SetActorLocation(Pos+FVector(0,0,FMath::Lerp(700.f,200.f,Immersion)));
+ Arm->SetWorldRotation(FRotator(CameraPitch,Heading+Orbit,0));Arm->TargetArmLength=Zoom;
+ if(GearView){
+  const FVector Focus=GearView==1?FVector(-3010,0,-100):FVector(2490,0,-145);
+  SetActorLocation(Hull->GetComponentTransform().TransformPosition(Focus));
+  Arm->SetWorldRotation(FRotator(-2,Heading+110+Orbit,0));Arm->TargetArmLength=FMath::Clamp(Zoom*.14f,600.f,2500.f);
+ }
+ UpdateSound();
+ if(UGameplayStatics::IsGamePaused(this))return;
+ Elapsed+=Dt;NoticeClock-=Dt;
+ if(Smoke)SmokeTick(Dt);else PollControls(Dt);
+ FVector V=Hull->GetPhysicsLinearVelocity();FVector Forward=Hull->GetForwardVector().GetSafeNormal2D();
+ Speed=FVector::DotProduct(V,Forward)/51.4444f;
+ UpdateGear(Dt);
+ if(!SafeAt(Pos+FVector(V.X,V.Y,0)*.7f)){
+  Hull->SetWorldLocation(LastSafe,false,nullptr,ETeleportType::TeleportPhysics);Hull->SetPhysicsLinearVelocity(FVector::ZeroVector);Throttle=0;TargetDepth=FMath::Min(TargetDepth,Depth);Notify(TEXT("Obstacle ou fond proche — moteurs stoppes"));
+ }else {Distance+=FVector::Dist2D(Pos,LastSafe)/100;LastSafe=Pos;}
+ const FVector Desired=Forward*(FMath::Clamp(Gear.RPM/((DiveControl||TargetDepth>.5)?280.f:470.f),-.3f,1.f)*(Depth>8?390.f:900.f));
+ FVector Accel=(Desired-FVector(V.X,V.Y,0))*.4f+Desired*.8f;Accel.Z=0;
+ Hull->AddForce(Accel,NAME_None,true);
+ const FVector Omega=Hull->GetPhysicsAngularVelocityInRadians();
+ const float YawRate=(Gear.Rudder/33.f)*.10f*FMath::Clamp(FMath::Abs(Speed)/6.f,.08f,1.f)*(Speed<-.3f?-1.f:1.f);
+ FVector Torque(0,0,(YawRate-Omega.Z)*1.8f+Omega.Z*.5f);
+ const bool WasDiving=DiveControl;
+ if(TargetDepth>0.5)DiveControl=true;else if(Depth<1.5)DiveControl=false;
+ if(WasDiving!=DiveControl){Buoyancy->SetCanBeActive(!DiveControl);Hull->WakeAllRigidBodies();}
+ if(DiveControl){
+  const float Error=-190-TargetDepth*100-Pos.Z;
+  const float WantedVz=FMath::Clamp(Error*.28f,-220.f,220.f);
+  Hull->AddForce(FVector(0,0,-GetWorld()->GetGravityZ()+FMath::Clamp((WantedVz-V.Z)*1.4f+WantedVz*.8f,-350.f,350.f)),NAME_None,true);
+  // Align the hull's up vector in world space; local Euler angles are not
+  // world torque axes after turning and could roll the boat upside down.
+  const FVector LevelTorque=FVector::CrossProduct(Hull->GetUpVector(),FRotator(FMath::Clamp(Error*.004f,-8.f,8.f),Heading,0).RotateVector(FVector::UpVector))*1.8f;
+  Torque.X=LevelTorque.X-Omega.X*1.5f;
+  Torque.Y=LevelTorque.Y-Omega.Y*1.5f;
+ }
+ Hull->AddTorqueInRadians(Torque,NAME_None,true);
+ for(int32 I=0;I<3;++I){if(!(Discoveries&(1<<I))&&FVector::Dist2D(Pos,Goal(I))<8500&&FMath::Abs(Depth+Goal(I).Z/100)<12){Discoveries|=1<<I;Notify(TEXT("Decouverte : ")+GoalName(I));Selected=(I+1)%3;Save();}}
+ SaveClock+=Dt;if(SaveClock>15){SaveClock=0;Save();}
+ if(ResumeTest&&Elapsed>3){FPlatformMisc::RequestExit(false);}
+}
+void AVoyagePawn::Save(){
+ if(!Ready)return;
+ UVoyageSave* S=Cast<UVoyageSave>(UGameplayStatics::CreateSaveGameObject(UVoyageSave::StaticClass()));
+ S->SoundVolume=SoundVolume;S->SoundMuted=SoundMuted;
+ S->Position=Hull->GetComponentLocation();S->Heading=Hull->GetComponentRotation().Yaw;S->TargetDepth=TargetDepth;S->Discoveries=Discoveries;S->Distance=Distance;
+ if(!UGameplayStatics::SaveGameToSlot(S,Slot(),0)){Notify(TEXT("Echec de sauvegarde — verifiez l'espace disque"));UE_LOG(LogTemp,Error,TEXT("VOYAGE_SAVE_FAILED"));}
+}
+bool AVoyagePawn::ReadSave(){
+ auto* S=Cast<UVoyageSave>(UGameplayStatics::LoadGameFromSlot(Slot(),0));if(!S||S->Version!=1)return false;
+ SoundVolume=FMath::IsFinite(S->SoundVolume)?FMath::Clamp(S->SoundVolume,0.f,1.f):.75f;SoundMuted=S->SoundMuted;
+ if(S->Position.ContainsNaN()||FVector2D(S->Position).Size()>200000||S->Position.Z< -22500||S->Position.Z>3000||!FMath::IsFinite(S->Heading)||!SafeAt(S->Position))return false;
+ Hull->SetWorldLocationAndRotation(S->Position,FRotator(0,S->Heading,0),false,nullptr,ETeleportType::TeleportPhysics);
+ Hull->SetPhysicsLinearVelocity(FVector::ZeroVector);Hull->SetPhysicsAngularVelocityInRadians(FVector::ZeroVector);
+ TargetDepth=FMath::IsFinite(S->TargetDepth)?FMath::Clamp(S->TargetDepth,0.f,120.f):0;
+ Discoveries=S->Discoveries&7;Distance=FMath::IsFinite(S->Distance)?FMath::Max(0.f,S->Distance):0;LastSafe=S->Position;Throttle=0;
+ DiveControl=S->Position.Z< -490||TargetDepth>.5;Buoyancy->SetCanBeActive(!DiveControl);
+ return true;
+}
+void AVoyagePawn::EndPlay(const EEndPlayReason::Type R){if(Soundscape)Soundscape->Stop();if(R!=EEndPlayReason::LevelTransition)Save();Super::EndPlay(R);}
+void AVoyagePawn::TestFail(const FString& Why){
+ IFileManager::Get().MakeDirectory(*(FPaths::ProjectSavedDir()/TEXT("VoyageTests")),true);
+ FFileHelper::SaveStringToFile(TEXT("FAIL: ")+Why,*(FPaths::ProjectSavedDir()/TEXT("VoyageTests/result.txt")));
+ UE_LOG(LogTemp,Error,TEXT("VOYAGE_TEST_FAIL %s"),*Why);FPlatformMisc::RequestExitWithStatus(false,2);
+}
+void AVoyagePawn::SmokeTick(float Dt){
+ const bool GearTest=FParse::Param(FCommandLine::Get(),TEXT("VoyageGearTest"));
+ static bool SternShot=false,BowShot=false;
+ if(GearTest){
+  if(GearMeshes.Num()!=7||Hull->IsVisible()||!Hull->IsSimulatingPhysics()){TestFail(TEXT("articulated visual/physics separation"));return;}
+  if(Elapsed>14&&Elapsed<23)GearView=1;
+  if(Elapsed>23&&Elapsed<45)GearView=2;
+  if(Elapsed>16&&!SternShot){SternShot=true;FScreenshotRequest::RequestScreenshot(FPaths::ProjectSavedDir()/TEXT("VoyageTests/gear-stern.png"),true,false);}
+  if(Elapsed>25&&!BowShot){BowShot=true;FScreenshotRequest::RequestScreenshot(FPaths::ProjectSavedDir()/TEXT("VoyageTests/gear-bow.png"),true,false);}
+ }
+ static int32 LastReport=-1;
+ int32 Report=FMath::FloorToInt(Elapsed/10);
+ if(Report!=LastReport){LastReport=Report;UE_LOG(LogTemp,Display,TEXT("GEAR_STATE rpm=%.1f rudder=%.1f bow=%.1f stern=%.1f parts=%d"),Gear.RPM,Gear.Rudder,Gear.Bow,Gear.Stern,GearMeshes.Num());UE_LOG(LogTemp,Display,TEXT("VOYAGE_TEST t=%.1f depth=%.1f speed=%.1f heading=%.1f water=%d roll=%.1f pitch=%.1f"),Elapsed,Depth,Speed,Heading,Buoyancy->IsInWaterBody(),Hull->GetComponentRotation().Roll,Hull->GetComponentRotation().Pitch);}
+ if(TestStage==0&&Elapsed<.1f){
+  if(!SafeAt(TestStart)||SafeAt(FVector(80000,50000,-190))||SafeAt(FVector(250000,0,-190))||SafeAt(FVector(0,0,-23000))){TestFail(TEXT("obstacle_boundary_clearance"));TestStage=99;return;}
+ }
+
+ if(Elapsed<10){Throttle=1;Rudder=0;}
+ else if(Elapsed<20){
+  if(TestStage==0){TestMoved=FVector::Dist2D(Hull->GetComponentLocation(),TestStart)>2500;TestHeading=Heading;TestStage=1;FScreenshotRequest::RequestScreenshot(FPaths::ProjectSavedDir()/TEXT("VoyageTests/surface.png"),true,false);}
+  Rudder=.8f;
+ }else if(Elapsed<45){
+  if(TestStage==1){TestTurned=FMath::Abs(FMath::FindDeltaAngleDegrees(TestHeading,Heading))>15;TestStage=2;}
+  Rudder=0;Throttle=.25;TargetDepth=GearTest?30:15;
+  if(Elapsed>35&&(FMath::Abs(Hull->GetComponentRotation().Roll)>10||FMath::Abs(Hull->GetComponentRotation().Pitch)>10)){TestFail(TEXT("underwater stability"));TestStage=99;return;}
+ }else if(Elapsed<80){
+  if(TestStage==2){TestDived=Depth>10;TestStage=3;FScreenshotRequest::RequestScreenshot(FPaths::ProjectSavedDir()/TEXT("VoyageTests/submerged.png"),true,false);}
+  Throttle=0;TargetDepth=0;
+ }else if(TestStage==3){
+  if(!TestMoved||!TestTurned||!TestDived||Depth>4||DiveControl){TestFail(FString::Printf(TEXT("motion=%d turn=%d dive=%d depth=%.1f active=%d"),TestMoved,TestTurned,TestDived,Depth,DiveControl));TestStage=99;return;}
+  TestStage=4;
+  Hull->SetWorldLocation(FVector(0,-35000,-190),false,nullptr,ETeleportType::TeleportPhysics);Hull->SetPhysicsLinearVelocity(FVector::ZeroVector);
+ }else if(TestStage==4&&Elapsed>81){
+  if(!(Discoveries&1)){TestFail(TEXT("surface objective"));TestStage=99;return;}
+  Hull->SetWorldLocation(Goal(1)+FVector(-7000,0,-190),false,nullptr,ETeleportType::TeleportPhysics);Hull->SetPhysicsLinearVelocity(FVector::ZeroVector);TargetDepth=45;TestStage=5;
+ }else if(TestStage==5&&Elapsed>82){
+  if(!(Discoveries&2)){TestFail(TEXT("submerged objective"));TestStage=99;return;}
+  Hull->SetWorldLocation(Goal(2)+FVector(0,-7800,-190),false,nullptr,ETeleportType::TeleportPhysics);Hull->SetPhysicsLinearVelocity(FVector::ZeroVector);TargetDepth=0;TestStage=6;
+ }else if(TestStage==6&&Elapsed>84){
+  if(Discoveries!=7){TestFail(TEXT("Bismarck objective"));TestStage=99;return;}
+  Save();
+  IFileManager::Get().MakeDirectory(*(FPaths::ProjectSavedDir()/TEXT("VoyageTests")),true);
+  FFileHelper::SaveStringToFile(TEXT("PASS: propulsion, steering, dive, surface, 3 objectives, checkpoint saved\n"),*(FPaths::ProjectSavedDir()/TEXT("VoyageTests/result.txt")));
+  UE_LOG(LogTemp,Display,TEXT("VOYAGE_SMOKE_PASS"));TestStage=7;
+  FScreenshotRequest::RequestScreenshot(FPaths::ProjectSavedDir()/TEXT("VoyageTests/complete.png"),true,false);
+ }else if(TestStage==7&&Elapsed>87){
+  if(!GearTest)FPlatformMisc::RequestExit(false);
+  else {Throttle=-.3f;GearView=1;if(Elapsed>100){
+   if(Gear.RPM>=-100||GearMeshes[1]->GetRelativeRotation().Equals(GearMeshes[2]->GetRelativeRotation(),.01f)){TestFail(TEXT("reverse shaft animation"));return;}
+   FFileHelper::SaveStringToFile(TEXT("PASS: 7 articulated parts, physics retained, navigation/dive/surface, astern and opposite shafts"),*(FPaths::ProjectSavedDir()/TEXT("VoyageTests/gear.txt")));
+   UE_LOG(LogTemp,Display,TEXT("GEAR_RUNTIME_PASS"));FPlatformMisc::RequestExit(false);
+  }}
+ }
+}
+void AVoyageHUD::DrawHUD(){
+ Super::DrawHUD();if(!Canvas)return;
+ auto* P=Cast<AVoyagePawn>(GetOwningPawn());if(!P)return;
+ const float W=Canvas->SizeX,H=Canvas->SizeY,S=FMath::Clamp(W/1600.f,.65f,1.3f);
+ UFont* Font=GEngine->GetMediumFont();const FLinearColor White(.90,.94,.94),Muted(.52,.67,.71),Gold(1,.72,.32),Panel(.025,.06,.085,.90);
+ auto Text=[&](const FString& T,float X,float Y,FLinearColor C,float Scale=1.f){DrawText(T,C,X,Y,Font,S*Scale*1.3f,false);};
+ DrawRect(Panel,20*S,20*S,550*S,144*S);
+ Text(TEXT("NORDATLANTIK  /  EXPLORATION"),38*S,32*S,Gold,1.0);
+ Text(FString::Printf(TEXT("%.1f nd     CAP %03.0f     PROF. %.1f m"),P->Speed,float(FMath::RoundToInt(P->Heading+450)%360),P->Depth),38*S,69*S,White,1.25);
+ Text(FString::Printf(TEXT("MOTEUR %+03.0f %%    PROFONDEUR CIBLE %.0f m"),P->Throttle*100,P->TargetDepth),38*S,110*S,Muted,.9);
+ Text(FString::Printf(TEXT("ARBRES %.0f tr/min   BARRE %+.0f   PLANS %+.0f / %+.0f"),P->Gear.RPM,P->Gear.Rudder,P->Gear.Bow,P->Gear.Stern),38*S,141*S,Muted,.72);
+ const float GX=W-430*S;
+ DrawRect(Panel,GX,20*S,410*S,160*S);
+ const int32 Count=((P->Discoveries&1)?1:0)+((P->Discoveries&2)?1:0)+((P->Discoveries&4)?1:0);
+ Text(FString::Printf(TEXT("CARNET DE BORD   %d / 3"),Count),GX+18*S,34*S,Gold);
+ Text(AVoyagePawn::GoalName(P->Selected),GX+18*S,72*S,White,.92);
+ float D=P->Hull?FVector::Dist2D(P->Hull->GetComponentLocation(),AVoyagePawn::Goal(P->Selected))/100:0;
+ Text(FString::Printf(TEXT("%.0f m  |  profondeur %.0f m%s"),D,FMath::Abs(AVoyagePawn::Goal(P->Selected).Z/100),(P->Discoveries&(1<<P->Selected))?TEXT("  |  visite"):TEXT("")),GX+18*S,108*S,Muted,.85);
+ Text(TEXT("TAB : changer d'objectif"),GX+18*S,145*S,Muted,.8);
+ // North-up chart: 1 km radius. Blue dot = VIIC, numbered dots = landmarks.
+ const float MapX=118*S,MapY=H-175*S,Radius=86*S;
+ DrawRect(Panel,20*S,H-284*S,196*S,215*S);
+ DrawLine(MapX-Radius,MapY,MapX+Radius,MapY,Muted,.5);DrawLine(MapX,MapY-Radius,MapX,MapY+Radius,Muted,.5);
+ Text(TEXT("N"),MapX-5*S,MapY-Radius-16*S,Gold,.75);
+ if(P->Hull){
+  FVector Here=P->Hull->GetComponentLocation();
+  for(int32 I=0;I<3;++I){FVector2D Delta(AVoyagePawn::Goal(I).X-Here.X,AVoyagePawn::Goal(I).Y-Here.Y);Delta/=100000; if(Delta.Size()>1)Delta.Normalize();
+   Text(FString::FromInt(I+1),MapX+Delta.X*Radius-4*S,MapY+Delta.Y*Radius-6*S,(P->Discoveries&(1<<I))?Muted:Gold,.85);
+  }
+  DrawRect(FLinearColor(.25,.8,1),MapX-3*S,MapY-3*S,6*S,6*S);
+ }
+ Text(FString::Printf(TEXT("DISTANCE %.0f m"),P->Distance),32*S,H-95*S,Muted,.75);
+ DrawRect(Panel,20*S,H-54*S,W-40*S,34*S);
+ Text(FString::Printf(TEXT("H : commandes | Espace : pause | F5 : sauvegarder | F6 : son | F7/F8 : volume  %.0f %% %s"),P->SoundVolume*100,P->SoundMuted?TEXT("(coupe)"):TEXT("")),36*S,H-49*S,Muted,.8);
+ if(P->ShowHelp){
+  DrawRect(Panel,GX,196*S,410*S,354*S);
+  TArray<FString> Lines={TEXT("PRENDRE LES COMMANDES"),TEXT("Z / W / Haut : augmenter le moteur"),TEXT("S / Bas : reduire, puis marche arriere"),TEXT("Q / A / Gauche   et   D / Droite : virer"),TEXT("F : plonger   |   R : remonter   |   P : surface"),TEXT("X : moteurs a zero (inertie)"),TEXT("Glisser la souris : orienter la camera"),TEXT("Molette : zoom   |   C : recentrer"),TEXT("Home : mouillage | Maj+Home : nouvelle partie"),TEXT("G : vues des organes mobiles"),TEXT("V : comparer avec le modele fixe"),TEXT("F6 : couper / remettre le son"),TEXT("F7 / F8 : volume sonore"),TEXT("H : masquer cette aide")};
+  for(int32 I=0;I<Lines.Num();++I)Text(Lines[I],GX+18*S,(210+23*I)*S,I==0?Gold:White,.78);
+ }
+ if(P->NoticeClock>0){DrawRect(Panel,240*S,H-105*S,W-480*S,38*S);Text(P->Notice,255*S,H-98*S,Gold,.88);}
+ if(Count==3&&!P->ShowHelp)Text(TEXT("EXPLORATION TERMINEE — la navigation reste libre"),W*.30,H-147*S,Gold,1.0);
+ if(UGameplayStatics::IsGamePaused(P)){
+  DrawRect(FLinearColor(0,0,0,.65),0,0,W,H);DrawRect(Panel,W*.25,H*.35,W*.5,H*.26);
+  Text(TEXT("EN PAUSE"),W*.43,H*.39,Gold,1.7);
+  Text(TEXT("Espace / Echap : reprendre    |    Cmd + Q : quitter"),W*.28,H*.50,White,.95);
+  Text(TEXT("Position et decouvertes sauvegardees"),W*.34,H*.55,Muted,.9);
+ }
+}
